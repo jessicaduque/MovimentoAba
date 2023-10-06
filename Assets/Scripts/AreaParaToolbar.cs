@@ -8,7 +8,6 @@ public class AreaParaToolbar : MonoBehaviour
     [SerializeField] private RectTransform tbRect;
     [SerializeField] private RectTransform thistbRect;
 
-    private Vector3 novaPosicao;
     private RectTransform interf;
     private Toolbar tb;
 
@@ -39,9 +38,12 @@ public class AreaParaToolbar : MonoBehaviour
                 tbRect.transform.eulerAngles = new Vector3(0, 0, -180);
                 break;
         }
-        tbRect.DOLocalMove(Vector3.zero, 0.4f).OnComplete(() => tbRect.transform.SetParent(interf.transform));
+        tbRect.transform.localPosition = Vector3.zero;
+        tbRect.transform.SetParent(interf.transform);
+        
         tb.SetarArea(numArea);
     }
+
 
     public int GetAreaNum()
     {

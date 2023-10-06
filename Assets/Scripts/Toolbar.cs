@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 public class Toolbar : MonoBehaviour, IPointerClickHandler
 {
     private bool cursorSeguindo = false;
-    private bool dentroArea = true;
+    private bool dentroArea = false;
     private Button botao;
     private int ultimaArea;
     private int areaAtual;
@@ -24,7 +24,6 @@ public class Toolbar : MonoBehaviour, IPointerClickHandler
     [Header("Colors")]
     [SerializeField] Color green;
     [SerializeField] Color gray;
-
 
 
     private void Start()
@@ -65,6 +64,7 @@ public class Toolbar : MonoBehaviour, IPointerClickHandler
         alphaAreas.DOFade(1, 0.2f);
         cursorSeguindo = true;
         StartCoroutine(SeguirCursor());
+        
     }
 
     IEnumerator SeguirCursor()
@@ -78,9 +78,6 @@ public class Toolbar : MonoBehaviour, IPointerClickHandler
 
     private void OnMouseUp()
     {
-        cursorSeguindo = false;
-        alphaAreas.DOFade(0, 0.2f).OnComplete(() => botao.enabled = true);
-
         if (dentroArea)
         {
             areas[areaAtual].EncaixarEmArea();
@@ -89,7 +86,6 @@ public class Toolbar : MonoBehaviour, IPointerClickHandler
         {
             areas[ultimaArea].EncaixarEmArea();
         }
-        
         
     }
 
@@ -101,9 +97,9 @@ public class Toolbar : MonoBehaviour, IPointerClickHandler
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        dentroArea = true;
         areaAtual = collision.GetComponent<AreaParaToolbar>().GetAreaNum();
         collision.gameObject.GetComponent<Image>().DOColor(green, 0.4f);
+        dentroArea = true;
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -115,6 +111,8 @@ public class Toolbar : MonoBehaviour, IPointerClickHandler
     public void SetarArea(int area)
     {
         ultimaArea = area;
+        cursorSeguindo = false;
+        alphaAreas.DOFade(0, 0.2f).OnComplete(() => botao.enabled = true);
     }
 
 
