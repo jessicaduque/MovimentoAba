@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class Draw : MonoBehaviour
 {
-    // Referência para a câmera usada para converter as coordenadas do mouse para o mundo do jogo.
-    public Camera m_camera;
+    // Referência para a câmera usada para converter as coordenadas do mouse para o mundo virtual
+    [SerializeField] Camera m_camera;
 
     // Prefab do pincel que será desenhado.
-    public GameObject brush;
+    [SerializeField] GameObject brush;
 
     // Referência para o LineRenderer da linha atual sendo desenhada.
     LineRenderer currentLineRenderer;
@@ -17,11 +17,9 @@ public class Draw : MonoBehaviour
     Vector2 lastPos;
 
     // Lista que armazenará os objetos dos pinceis desenhados.
-    [SerializeField]
-    private List<GameObject> brushStrokes;
+    [SerializeField] List<GameObject> brushStrokes;
     // Lista que armazenará os objetos dos pinceis desfeitos (undo).
-    [SerializeField]
-    private List<GameObject> reUndoBrush;
+    [SerializeField] List<GameObject> reUndoBrush;
 
 
     private void Awake()
@@ -30,6 +28,7 @@ public class Draw : MonoBehaviour
         brushStrokes = new List<GameObject>();
         reUndoBrush = new List<GameObject>();
     }
+
     // Método chamado a cada frame.
     private void Update()
     {
@@ -57,20 +56,21 @@ public class Draw : MonoBehaviour
         {
             currentLineRenderer = null;
         }
+
         // Verifica se "CTRL + Z" está sendo mantido pressionado.
-        if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKey(KeyCode.Z))
+        if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKeyDown(KeyCode.Z))
         {
             Debug.Log("Desfazer rabisco");
             UndoBrush();
         }
         // Verifica se "ESC" está sendo mantido pressionado.
-        if (Input.GetKey(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             Debug.Log("Limpar a tela");
             ClearBoard();
         }
         // Verifica se "CTRL + Y" está sendo mantido pressionado.
-        if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKey(KeyCode.Y))
+        if ((Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) && Input.GetKeyDown(KeyCode.Y))
         {
             Debug.Log("Refazer rabisco");
             ReDoBrush();
@@ -97,7 +97,6 @@ public class Draw : MonoBehaviour
             brushStrokes.Add(reUndoBrush[reUndoBrush.Count - 1]);
             reUndoBrush[reUndoBrush.Count - 1].SetActive(true);
             reUndoBrush.RemoveAt(reUndoBrush.Count - 1);
-
         }
     }
 
@@ -122,12 +121,6 @@ public class Draw : MonoBehaviour
             Debug.Log("Tela completamente limpa");
             brushStrokes.Clear();
         }
-    }
-
-    void Limpa()
-    {
-        
-    
     }
 
     // Função que cria um novo pincel.
