@@ -39,13 +39,15 @@ public class Draw : MonoBehaviour
     // Função que controla o desenho.
     void Drawing()
     {
-        // Verifica se o botão do mouse 4 foi pressionado.
+        // Verifica se o botão esquerdo do mouse foi pressionado.
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             // Se pressionado, cria um novo pincel.
             CreateBrush();
+            ClearReUndo();
+
         }
-        // Verifica se o botão do mouse 4 está sendo mantido pressionado.
+        // Verifica se o botão esquerdo do mouse está sendo mantido pressionado.
         else if (Input.GetKey(KeyCode.Mouse0))
         {
             // Se mantido pressionado, atualiza a posição do desenho.
@@ -93,7 +95,6 @@ public class Draw : MonoBehaviour
     {
         if (reUndoBrush.Count > 0)
         {
-            // GameObject brushStrokes = Instantiate(reUndoBrush[reUndoBrush.Count -1]);
             brushStrokes.Add(reUndoBrush[reUndoBrush.Count - 1]);
             reUndoBrush[reUndoBrush.Count - 1].SetActive(true);
             reUndoBrush.RemoveAt(reUndoBrush.Count - 1);
@@ -109,19 +110,32 @@ public class Draw : MonoBehaviour
             // Destroi todos os pinceis desenhados e limpa a lista.
             foreach (GameObject bs in brushStrokes)
             {
-                // Adiciona o último pincel à lista de desfeitos (undo).
-                //reUndoBrush.Add(brushStrokes[brushStrokes.Count - 1]);
-                //Debug.Log("Adicionado a lista reUndo");
-                //brushStrokes[brushStrokes.Count - 1].SetActive(false);
-                //brushStrokes.RemoveAt(brushStrokes.Count - 1);
+;
                 Debug.Log("Tela sendo limpa");
                 Destroy(bs);
-                //UndoBrush();
+
             }
             Debug.Log("Tela completamente limpa");
             brushStrokes.Clear();
         }
     }
+
+    void ClearReUndo()
+    {
+        if (reUndoBrush.Count > 0)
+        {
+            // Destroi todos os pinceis desenhados e limpa a lista.
+            foreach (GameObject bs in reUndoBrush)
+            {
+                
+                Destroy(bs);
+            }
+            Debug.Log("Lista de refazer limpa");
+            reUndoBrush.Clear();
+        }
+
+    }
+
 
     // Função que cria um novo pincel.
     void CreateBrush()
