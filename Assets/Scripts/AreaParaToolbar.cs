@@ -40,7 +40,6 @@ public class AreaParaToolbar : MonoBehaviour
         }
         tbRect.transform.localPosition = Vector3.zero;
         tbRect.transform.SetParent(interf.transform);
-        
         tb.SetarArea(numArea);
     }
 

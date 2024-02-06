@@ -17,7 +17,6 @@ public class ToolbarSlotsController : MonoBehaviour
         b_5.onClick.AddListener(Function_b5);
 
         _toolbar = FindObjectOfType<Toolbar>();
-
     }
 
 

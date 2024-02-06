@@ -26,10 +26,15 @@ public class Toolbar : MonoBehaviour, IPointerClickHandler
     [SerializeField] Color gray;
 
 
-    private void Start()
+    private void Awake()
     {
         botao = GetComponent<Button>();
+    }
+
+    private void Start()
+    {
         areas[0].EncaixarEmArea();
+        Debug.Log("asd");
     }
 
     public void OnPointerClick(PointerEventData eventData)
