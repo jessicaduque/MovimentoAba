@@ -31,10 +31,10 @@ public class Toolbar : MonoBehaviour, IPointerClickHandler
         botao = GetComponent<Button>();
     }
 
-    private void Start()
+    private IEnumerator Start()
     {
+        yield return new WaitForSeconds(0.001f);
         areas[0].EncaixarEmArea();
-        Debug.Log("asd");
     }
 
     public void OnPointerClick(PointerEventData eventData)

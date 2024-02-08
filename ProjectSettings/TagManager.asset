@@ -42,3 +42,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Drawing
+    uniqueID: 2678454863
+    locked: 0
+  - name: Toolbar
+    uniqueID: 3467171917
+    locked: 0

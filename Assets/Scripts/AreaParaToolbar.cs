@@ -19,7 +19,6 @@ public class AreaParaToolbar : MonoBehaviour
         interf = GameObject.FindGameObjectWithTag("Interface").GetComponent<RectTransform>();
     }
 
-
     public void EncaixarEmArea()
     {
         tbRect.transform.SetParent(thistbRect);
