@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Utils.Singleton;
 
-public class Draw : MonoBehaviour
+public class Draw : Singleton<Draw>
 {
     // Referência para a câmera usada para converter as coordenadas do mouse para o mundo virtual
     [SerializeField] Camera m_camera;
@@ -21,6 +22,8 @@ public class Draw : MonoBehaviour
     // Lista que armazenará os objetos dos pinceis desfeitos (undo).
     [SerializeField] List<GameObject> reUndoBrush;
 
+    // Booleano que indica se pode ou não desenhar
+    bool canDraw = true;
 
     private void Awake()
     {
@@ -32,8 +35,15 @@ public class Draw : MonoBehaviour
     // Método chamado a cada frame.
     private void Update()
     {
-        // Chama o método responsável pelo desenho.
-        Drawing();
+        // Se for permitido desenhar, chama o método responsável pelo desenho.
+        if (canDraw)
+        {
+            Drawing();
+        }
+        else
+        {
+            currentLineRenderer = null;
+        }
     }
 
     // Função que controla o desenho.
@@ -78,6 +88,8 @@ public class Draw : MonoBehaviour
             ReDoBrush();
         }
     }
+
+    #region Undo & Redo
     // Desfaz o ultimo pincel da lista 
     void UndoBrush()
     {
@@ -100,7 +112,9 @@ public class Draw : MonoBehaviour
             reUndoBrush.RemoveAt(reUndoBrush.Count - 1);
         }
     }
+    #endregion
 
+    #region Clear
 
     // Limpa todos os pinceis da lista
     void ClearBoard()
@@ -136,6 +150,7 @@ public class Draw : MonoBehaviour
 
     }
 
+    #endregion
 
     // Função que cria um novo pincel.
     void CreateBrush()
@@ -160,6 +175,7 @@ public class Draw : MonoBehaviour
     {
         // Adiciona um novo ponto à linha do pincel.
         currentLineRenderer.positionCount++;
+        Debug.Log(currentLineRenderer);
         int positionIndex = currentLineRenderer.positionCount - 1;
         currentLineRenderer.SetPosition(positionIndex, pointPos);
     }
@@ -178,4 +194,13 @@ public class Draw : MonoBehaviour
             lastPos = mousePos;
         }
     }
+
+    #region Set
+
+    public void SetCanDraw(bool state)
+    {
+        canDraw = state;
+    }
+
+    #endregion
 }
