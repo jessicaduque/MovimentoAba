@@ -25,8 +25,9 @@ public class Draw : Singleton<Draw>
     // Booleano que indica se pode ou não desenhar
     bool canDraw = true;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         // Inicialização das listas no início do script.
         brushStrokes = new List<GameObject>();
         reUndoBrush = new List<GameObject>();
@@ -49,6 +50,7 @@ public class Draw : Singleton<Draw>
     // Função que controla o desenho.
     void Drawing()
     {
+        
         // Verifica se o botão esquerdo do mouse foi pressionado.
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
@@ -62,11 +64,6 @@ public class Draw : Singleton<Draw>
         {
             // Se mantido pressionado, atualiza a posição do desenho.
             PointToMousePos();
-        }
-        // Se o botão não está sendo pressionado, limpa a referência para a linha atual.
-        else
-        {
-            currentLineRenderer = null;
         }
 
         // Verifica se "CTRL + Z" está sendo mantido pressionado.
@@ -174,10 +171,13 @@ public class Draw : Singleton<Draw>
     void AddAPoint(Vector2 pointPos)
     {
         // Adiciona um novo ponto à linha do pincel.
-        currentLineRenderer.positionCount++;
-        Debug.Log(currentLineRenderer);
-        int positionIndex = currentLineRenderer.positionCount - 1;
-        currentLineRenderer.SetPosition(positionIndex, pointPos);
+        if (currentLineRenderer != null) 
+        {
+            currentLineRenderer.positionCount++;
+            int positionIndex = currentLineRenderer.positionCount - 1;
+            currentLineRenderer.SetPosition(positionIndex, pointPos);
+        }
+        
     }
 
     // Função que move a linha do pincel para a posição do mouse.

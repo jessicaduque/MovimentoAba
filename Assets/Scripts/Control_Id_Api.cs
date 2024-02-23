@@ -5,6 +5,7 @@ using UnityEngine.Networking;
 
 using UnityEngine.UI;
 
+
 public class Control_Id_Api: MonoBehaviour
 {
     public Text requestResult;
@@ -30,11 +31,11 @@ public class Control_Id_Api: MonoBehaviour
         {
             string jsonDownloaded = www.downloadHandler.text;
             control = JsonUtility.FromJson<Control_Id_class>(jsonDownloaded);
-            string utc = control.control_id;
-            if(utc != null)
+            string estado = control.control_id;
+            if(estado != null)
             {
-                requestResult.text = utc;
-                ChecarFuncionalidade(utc);
+                requestResult.text = estado;
+                ChecarFuncionalidade(estado);
             }
             
         }
