@@ -9,16 +9,12 @@ public class WorldTimeAPI : MonoBehaviour
 {
     public Text requestResult;
     public WorldTimeData timeData;
-    /*
+    
     void Start()
     {
         StartCoroutine(GetDateTimeOnline());
     }
-    */
-    void Update()
-    {
-        StartCoroutine(GetDateTimeOnline());
-    }
+
     public IEnumerator GetDateTimeOnline() 
     {
         string url = "http://worldtimeapi.org/api/timezone/America/Sao_Paulo";
@@ -37,6 +33,9 @@ public class WorldTimeAPI : MonoBehaviour
             requestResult.text = utc;
         }
 
+        yield return new WaitForSeconds(0.2f);
+
+        StartCoroutine(GetDateTimeOnline());
     }
 
 }

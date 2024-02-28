@@ -36,12 +36,9 @@ public class Draw : Singleton<Draw>
     // Método chamado a cada frame.
     private void Update()
     {
-        // Se for permitido desenhar, chama o método responsável pelo desenho.
-        if (canDraw)
-        {
-            Drawing();
-        }
-        else
+        // Se for permitido desenhar, chama o método responsável pelo desenho
+        Drawing();
+        if (!canDraw)
         {
             currentLineRenderer = null;
         }
@@ -52,7 +49,7 @@ public class Draw : Singleton<Draw>
     {
         
         // Verifica se o botão esquerdo do mouse foi pressionado.
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKeyDown(KeyCode.Mouse0) && canDraw)
         {
             // Se pressionado, cria um novo pincel.
             CreateBrush();
@@ -60,7 +57,7 @@ public class Draw : Singleton<Draw>
 
         }
         // Verifica se o botão esquerdo do mouse está sendo mantido pressionado.
-        else if (Input.GetKey(KeyCode.Mouse0))
+        else if (Input.GetKey(KeyCode.Mouse0) && canDraw)
         {
             // Se mantido pressionado, atualiza a posição do desenho.
             PointToMousePos();
