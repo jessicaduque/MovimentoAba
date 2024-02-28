@@ -37,7 +37,7 @@ public class AreaParaToolbar : MonoBehaviour
                 tbRect.transform.eulerAngles = new Vector3(0, 0, -180);
                 break;
         }
-        tbRect.transform.localPosition = Vector3.zero;
+        tbRect.transform.localPosition = new Vector3(0, 0, -10000);
         tbRect.transform.SetParent(interf.transform);
         tb.SetarArea(numArea);
     }
