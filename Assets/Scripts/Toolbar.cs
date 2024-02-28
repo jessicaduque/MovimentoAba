@@ -25,6 +25,7 @@ public class Toolbar : MonoBehaviour, IPointerClickHandler
     [SerializeField] Color green;
     [SerializeField] Color gray;
 
+    Draw _draw => Draw.I;
 
     private void Awake()
     {
@@ -63,6 +64,7 @@ public class Toolbar : MonoBehaviour, IPointerClickHandler
 
     private void OnMouseDown()
     {
+        _draw.SetCanDraw(false);
         rectToolbarAberto.DOScaleY(0, 0.4f);
         GetComponent<RectTransform>().pivot = new Vector3(0.5f, 0.5f);
         botao.enabled = false;
@@ -91,7 +93,8 @@ public class Toolbar : MonoBehaviour, IPointerClickHandler
         {
             areas[ultimaArea].EncaixarEmArea();
         }
-        
+        _draw.SetCanDraw(true);
+
     }
 
     void PosCursor()
