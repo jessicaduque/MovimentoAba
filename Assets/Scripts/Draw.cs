@@ -1,4 +1,4 @@
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Utils.Singleton;
@@ -24,6 +24,7 @@ public class Draw : Singleton<Draw>
 
     // Booleano que indica se pode ou não desenhar
     bool canDraw = true;
+    bool isDrawing;
 
     protected override void Awake()
     {
@@ -40,6 +41,7 @@ public class Draw : Singleton<Draw>
         Drawing();
         if (!canDraw)
         {
+            isDrawing = false;
             currentLineRenderer = null;
         }
     }
@@ -47,20 +49,11 @@ public class Draw : Singleton<Draw>
     // Função que controla o desenho.
     void Drawing()
     {
-        
         // Verifica se o botão esquerdo do mouse foi pressionado.
-        if (Input.GetKeyDown(KeyCode.Mouse0) && canDraw)
-        {
-            // Se pressionado, cria um novo pincel.
-            CreateBrush();
-            ClearReUndo();
-
-        }
-        // Verifica se o botão esquerdo do mouse está sendo mantido pressionado.
-        else if (Input.GetKey(KeyCode.Mouse0) && canDraw)
-        {
-            // Se mantido pressionado, atualiza a posição do desenho.
-            PointToMousePos();
+        if (canDraw && !isDrawing)
+        {         
+            StartCoroutine(PointToMousePos());
+            isDrawing = true;
         }
 
         // Verifica se "CTRL + Z" está sendo mantido pressionado.
@@ -178,18 +171,26 @@ public class Draw : Singleton<Draw>
     }
 
     // Função que move a linha do pincel para a posição do mouse.
-    void PointToMousePos()
+    IEnumerator PointToMousePos()
     {
-        // Converte a posição do mouse para as coordenadas do mundo do jogo.
-        Vector2 mousePos = m_camera.ScreenToWorldPoint(Input.mousePosition);
+        CreateBrush();
+        ClearReUndo();
 
-        // Verifica se a posição do mouse é diferente da última posição registrada.
-        if (lastPos != mousePos)
+        while (canDraw)
         {
-            // Adiciona um ponto à linha do pincel e atualiza a última posição registrada.
-            AddAPoint(mousePos);
-            lastPos = mousePos;
-        }
+            // Converte a posição do mouse para as coordenadas do mundo do jogo.
+            Vector2 mousePos = m_camera.ScreenToWorldPoint(Input.mousePosition);
+
+            // Verifica se a posição do mouse é diferente da última posição registrada.
+            if (lastPos != mousePos)
+            {
+                // Adiciona um ponto à linha do pincel e atualiza a última posição registrada.
+                AddAPoint(mousePos);
+                lastPos = mousePos;
+            }
+
+            yield return null;
+        }       
     }
 
     #region Set

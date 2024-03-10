@@ -11,6 +11,7 @@ public class Control_Id_Api: MonoBehaviour
     public Text requestResult;
     public Control_Id_class control;
 
+    MouseController mouseController => MouseController.I;
     Draw DrawManager => Draw.I;
 
     void Update()
@@ -32,7 +33,19 @@ public class Control_Id_Api: MonoBehaviour
             string jsonDownloaded = www.downloadHandler.text;
             control = JsonUtility.FromJson<Control_Id_class>(jsonDownloaded);
             string estado = control.control_id;
-            if(estado != null)
+
+            float cursorX = control.cursor_x;
+            float cursorY = control.cursor_y;
+
+            if(cursorX == -1 || cursorY == -1)
+            {
+                DrawManager.SetCanDraw(false);
+                yield return null;
+            }
+
+            mouseController.SetCursorPosControlId(cursorX, cursorY);
+
+            if (estado != null)
             {
                 requestResult.text = estado;
                 ChecarFuncionalidade(estado);
