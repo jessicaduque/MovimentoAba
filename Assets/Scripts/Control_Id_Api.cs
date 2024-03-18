@@ -11,8 +11,10 @@ public class Control_Id_Api: MonoBehaviour
     public Text requestResult;
     public Control_Id_class control;
 
-    MouseController mouseController => MouseController.I;
-    Draw DrawManager => Draw.I;
+    private string estadoAtual;
+
+    MouseController _mouseController => MouseController.I;
+    Draw _drawManager => Draw.I;
 
     void Update()
     {
@@ -39,11 +41,12 @@ public class Control_Id_Api: MonoBehaviour
 
             if(cursorX == -1 || cursorY == -1)
             {
-                DrawManager.SetCanDraw(false);
+                _drawManager.SetCanDraw(false);
+                _mouseController.SetMouseParado(true);
                 yield return null;
             }
 
-            mouseController.SetCursorPosControlId(cursorX, cursorY);
+            _mouseController.SetCursorPosControlId(cursorX, cursorY);
 
             if (estado != null)
             {
@@ -60,10 +63,15 @@ public class Control_Id_Api: MonoBehaviour
         switch (estado)
         {
             case "G-pen-down":
-                DrawManager.SetCanDraw(true);
+                if(estadoAtual != estado && !_mouseController.IsMouseMoving())
+                {
+                    _drawManager.SetCanDraw(true);
+                }
+                estadoAtual = estado;
                 break;
             default:
-                DrawManager.SetCanDraw(false);
+                estadoAtual = "";
+                _drawManager.SetCanDraw(false);
                 break;
         }
     }

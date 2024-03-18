@@ -11,6 +11,8 @@ public class MouseController : Utils.Singleton.Singleton<MouseController>
     float cursorX_controlId;
     float cursory_controlId;
 
+    bool podeUsarMouse = true;
+
     protected override void Awake()
     {
         mouse = Mouse.current;
@@ -27,12 +29,22 @@ public class MouseController : Utils.Singleton.Singleton<MouseController>
 
     private void Update()
     {
-        MoveCursor();
+        podeUsarMouse = !IsMouseMoving();
+
+        if (!podeUsarMouse)
+        {
+            MoveCursor();
+        }
     }
 
     void MoveCursor()
     {
         Mouse.current.WarpCursorPosition(new Vector2(screenWidth * cursorX_controlId, screenHeight * cursory_controlId));
+    }
+
+    public bool IsMouseMoving()
+    {
+        return Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0;
     }
 
     public void SetCursorPosControlId(float x, float y)
