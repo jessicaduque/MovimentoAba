@@ -1,45 +1,39 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class MouseController : Utils.Singleton.Singleton<MouseController>
 {
-    Mouse mouse = Mouse.current;
-    float screenWidth;
-    float screenHeight;
+    Mouse mouse = Mouse.current;    
 
     float cursorX_controlId;
     float cursory_controlId;
 
-    bool podeUsarMouse = true;
+    public bool ferramentaAtivada = false;
+
+    Helpers _helpers => Helpers.I;
 
     protected override void Awake()
     {
         mouse = Mouse.current;
-
-        screenWidth = Screen.width;
-        screenHeight = Screen.height;
     }
 
     private void Start()
     {
-        mouse.WarpCursorPosition(new Vector2(screenWidth / 2, screenHeight / 2));
+        mouse.WarpCursorPosition(new Vector2(_helpers.screenWidth / 2, _helpers.screenHeight / 2));
     }
 
 
     private void Update()
     {
-        podeUsarMouse = !IsMouseMoving();
-
-        if (!podeUsarMouse)
-        {
+        if (IsMouseMoving())
+            ferramentaAtivada = false;
+        if (ferramentaAtivada)
             MoveCursor();
-        }
     }
 
     void MoveCursor()
     {
-        Mouse.current.WarpCursorPosition(new Vector2(screenWidth * cursorX_controlId, screenHeight * cursory_controlId));
+        Mouse.current.WarpCursorPosition(new Vector2(_helpers.screenWidth * cursorX_controlId, _helpers.screenHeight * cursory_controlId));
     }
 
     public bool IsMouseMoving()

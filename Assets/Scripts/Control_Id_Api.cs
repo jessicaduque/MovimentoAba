@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Networking;
 
 using UnityEngine.UI;
@@ -11,10 +12,16 @@ public class Control_Id_Api: MonoBehaviour
     public Text requestResult;
     public Control_Id_class control;
 
+    float cursorX;
+    float cursorY;
+    public float[] point_list_x;
+    public float[] point_list_y;
+
     private string estadoAtual;
 
     MouseController _mouseController => MouseController.I;
     Draw _drawManager => Draw.I;
+    Helpers _helpers => Helpers.I;
 
     void Update()
     {
@@ -36,13 +43,15 @@ public class Control_Id_Api: MonoBehaviour
             control = JsonUtility.FromJson<Control_Id_class>(jsonDownloaded);
             string estado = control.control_id;
 
-            float cursorX = control.cursor_x;
-            float cursorY = control.cursor_y;
+            cursorX = control.cursor_x;
+            cursorY = control.cursor_y;
 
-            if(cursorX == -1 || cursorY == -1)
+            point_list_x = control.point_list_x;
+            point_list_y = control.point_list_y;
+
+            if (cursorX == -1 || cursorY == -1)
             {
                 _drawManager.SetCanDraw(false);
-                _mouseController.SetMouseParado(true);
                 yield return null;
             }
 
@@ -63,11 +72,23 @@ public class Control_Id_Api: MonoBehaviour
         switch (estado)
         {
             case "G-pen-down":
-                if(estadoAtual != estado && !_mouseController.IsMouseMoving())
+                // Checar que mouse não está movendo
+                if (_mouseController.IsMouseMoving())
                 {
-                    _drawManager.SetCanDraw(true);
+                    _drawManager.SetCanDraw(false);
+                    estadoAtual = estado;
+                    break;
                 }
-                estadoAtual = estado;
+
+                if (!_mouseController.ferramentaAtivada && estadoAtual != estado)
+                {
+                    Mouse.current.WarpCursorPosition(new Vector2(_helpers.screenWidth * cursorX, _helpers.screenHeight * cursorY));
+                    _mouseController.ferramentaAtivada = true;
+                    estadoAtual = estado;
+                }
+
+                _drawManager.SetCanDraw(_mouseController.ferramentaAtivada);
+                
                 break;
             default:
                 estadoAtual = "";
