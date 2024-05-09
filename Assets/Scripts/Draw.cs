@@ -26,6 +26,12 @@ public class Draw : Singleton<Draw>
     bool canDraw = true;
     bool isDrawing;
 
+    // Variáveis para armazenar as listas de pontos
+    float[] pointListX;
+    float[] pointListY;
+
+    LineRenderer lr;
+    Helpers _helpers => Helpers.I;
     protected override void Awake()
     {
         base.Awake();
@@ -74,6 +80,12 @@ public class Draw : Singleton<Draw>
             Debug.Log("Refazer rabisco");
             ReDoBrush();
         }
+        //if (Input.GetKey(KeyCode.S)) 
+        //{
+        //    Debug.Log("Suaviazar");
+        //    SetPointsLastLineRenderer();
+        //}
+
     }
 
     #region Undo & Redo
@@ -194,6 +206,43 @@ public class Draw : Singleton<Draw>
     }
 
     #region Set
+    // Israel sabe como funciona. QUualquer dúvida extra, NÃO procurar a Jessica.
+
+    public void SetPointsLists(float[] point_list_x, float[] point_list_y)
+    {
+        Debug.Log("Defini as listas!");
+        pointListX = point_list_x;
+        pointListY = point_list_y;  
+    }
+
+    public void SetPointsLastLineRenderer()
+    {
+        if(brushStrokes.Count == 0)
+        {
+            Debug.Log("Nada foi desenhado ainda!");
+            return;
+        }
+        float[] testArray1 = pointListX;
+        float[] testArray2 = pointListY;
+        lr = brushStrokes[brushStrokes.Count - 1].GetComponent<LineRenderer>();
+        lr.positionCount = testArray1.Length;
+
+        for(int i = 0; i < lr.positionCount; i++)
+        {
+            Vector3 point = _helpers.PythonToScreenPoints(testArray1[i], testArray2[i]);
+            lr.SetPosition(i, new Vector3(m_camera.ScreenToWorldPoint(point).x, m_camera.ScreenToWorldPoint(point).y, 0));
+        }
+
+        if(testArray1.Length - lr.positionCount > 0)
+        {
+            for(int i= lr.positionCount; i< testArray1.Length - lr.positionCount; i++)
+            {
+                Vector3 point = _helpers.PythonToScreenPoints(testArray1[i], testArray2[i]);
+                lr.SetPosition(i, new Vector3(m_camera.ScreenToWorldPoint(point).x, m_camera.ScreenToWorldPoint(point).y, 0));
+            }
+        }
+    }
+
 
     public void SetCanDraw(bool state)
     {

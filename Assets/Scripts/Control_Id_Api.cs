@@ -1,21 +1,23 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Networking;
-
 using UnityEngine.UI;
 
 
-public class Control_Id_Api: MonoBehaviour
+public class Control_Id_Api : MonoBehaviour
 {
     public Text requestResult;
     public Control_Id_class control;
 
     float cursorX;
     float cursorY;
-    public float[] point_list_x;
-    public float[] point_list_y;
+
+    // Variáveis para armazenar as listas de pontos
+    float[] pointListX;
+    float[] pointListY;
 
     private string estadoAtual;
 
@@ -39,6 +41,7 @@ public class Control_Id_Api: MonoBehaviour
         }
         else
         {
+
             string jsonDownloaded = www.downloadHandler.text;
             control = JsonUtility.FromJson<Control_Id_class>(jsonDownloaded);
             string estado = control.control_id;
@@ -46,13 +49,27 @@ public class Control_Id_Api: MonoBehaviour
             cursorX = control.cursor_x;
             cursorY = control.cursor_y;
 
-            point_list_x = control.point_list_x;
-            point_list_y = control.point_list_y;
+            pointListX = control.point_list_x;
+            pointListY = control.point_list_y;
+
 
             if (cursorX == -1 || cursorY == -1)
             {
                 _drawManager.SetCanDraw(false);
                 yield return null;
+            }
+
+            if (estado != "G-pen-down" && estadoAtual == "G-pen-down")
+            {
+                Debug.Log("Parou de desenhar");
+                _drawManager.SetPointsLists(control.point_list_x, control.point_list_y);
+                _drawManager.SetPointsLastLineRenderer();
+                //Debug.Log("Length" + control.point_list_x.Length);
+                //for (int i = 0; i < control.point_list_x.Length; i++)
+                //{
+                //    Debug.Log("x: " + control.point_list_x[i]);
+                //    Debug.Log("y: " + control.point_list_y[i]);
+                //}
             }
 
             _mouseController.SetCursorPosControlId(cursorX, cursorY);
@@ -62,7 +79,30 @@ public class Control_Id_Api: MonoBehaviour
                 requestResult.text = estado;
                 ChecarFuncionalidade(estado);
             }
-            
+
+
+            /*
+            Debug.Log("estado" + estado);
+            Debug.Log("estadoAtual" + estadoAtual);
+            if (estado != "G-pen-down" && estadoAtual == "G-pen-down")
+            {
+                _drawManager.SetPointsLastLineRenderer(control.point_list_x, control.point_list_y);
+                Debug.Log("Parou de desenhar");
+                for (int i = 0; i < control.point_list_x.Length; i++)
+                {
+                    Debug.Log(control.point_list_x[i]);
+                    Debug.Log(control.point_list_y[i]);
+                }
+            }
+
+
+            if (estado != null)
+            {
+                requestResult.text = estado;
+                ChecarFuncionalidade(estado);
+            }
+            */
+
         }
 
     }
@@ -76,7 +116,6 @@ public class Control_Id_Api: MonoBehaviour
                 if (_mouseController.IsMouseMoving())
                 {
                     _drawManager.SetCanDraw(false);
-                    estadoAtual = estado;
                     break;
                 }
 
@@ -84,16 +123,16 @@ public class Control_Id_Api: MonoBehaviour
                 {
                     Mouse.current.WarpCursorPosition(new Vector2(_helpers.screenWidth * cursorX, _helpers.screenHeight * cursorY));
                     _mouseController.ferramentaAtivada = true;
-                    estadoAtual = estado;
                 }
 
                 _drawManager.SetCanDraw(_mouseController.ferramentaAtivada);
-                
+
                 break;
             default:
-                estadoAtual = "";
                 _drawManager.SetCanDraw(false);
                 break;
         }
+        estadoAtual = estado;
     }
+
 }

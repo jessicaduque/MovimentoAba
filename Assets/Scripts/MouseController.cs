@@ -6,7 +6,7 @@ public class MouseController : Utils.Singleton.Singleton<MouseController>
     Mouse mouse = Mouse.current;    
 
     float cursorX_controlId;
-    float cursory_controlId;
+    float cursorY_controlId;
 
     public bool ferramentaAtivada = false;
 
@@ -33,7 +33,7 @@ public class MouseController : Utils.Singleton.Singleton<MouseController>
 
     void MoveCursor()
     {
-        Mouse.current.WarpCursorPosition(new Vector2(_helpers.screenWidth * cursorX_controlId, _helpers.screenHeight * cursory_controlId));
+        Mouse.current.WarpCursorPosition(_helpers.PythonToScreenPoints(cursorX_controlId, cursorY_controlId));
     }
 
     public bool IsMouseMoving()
@@ -44,7 +44,7 @@ public class MouseController : Utils.Singleton.Singleton<MouseController>
     public void SetCursorPosControlId(float x, float y)
     {
         cursorX_controlId = x; 
-        cursory_controlId = 1 - y;
+        cursorY_controlId = y;
     }
 
 }

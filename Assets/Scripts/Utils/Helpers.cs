@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Utils.Singleton;
 
@@ -12,5 +10,10 @@ public class Helpers : Singleton<Helpers>
     {
         screenWidth = Screen.width;
         screenHeight = Screen.height;
+    }
+
+    public Vector3 PythonToScreenPoints(float pointX, float pointY)
+    {
+        return new Vector3(pointX * screenWidth, (1 - pointY) * screenHeight, 0);
     }
 }

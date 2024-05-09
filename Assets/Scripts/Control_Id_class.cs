@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 [System.Serializable]
 public class Control_Id_class 
 {
